@@ -57,12 +57,6 @@
 (if (file-exists-p custom-file)
     (load-file custom-file))
 
-(setq-default ocaml-stuff-file "/home/blackpill0w/.opam/default/share/emacs/site-lisp")
-(if (file-exists-p ocaml-stuff-file)
-    (add-to-list 'load-path ocaml-stuff-file))
-(use-package ocp-indent
-  :ensure t)
-
 ;;; backups
 (defconst backup-dir
        (concat user-emacs-directory "backup/"))
@@ -317,11 +311,13 @@
 (add-hook 'haskell-mode-hook #'lsp)
 (add-hook 'haskell-literate-mode-hook #'lsp)
 
-(use-package tuareg
-  :ensure t)
+(setq-default ocaml-stuff-file "/home/qyrhx/.opam/default/share/emacs/site-lisp")
+(if (file-exists-p ocaml-stuff-file)
+    (add-to-list 'load-path ocaml-stuff-file))
 (use-package ocp-indent
   :ensure t)
-(add-to-list 'load-path "/home/blackpill0w/.opam/default/share/emacs/site-lisp")
+(use-package tuareg
+  :ensure t)
 
 (use-package nix-mode
   :ensure t

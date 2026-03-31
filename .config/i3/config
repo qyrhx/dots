@@ -6,7 +6,7 @@ exec_always feh --bg-fill ~/Pictures/Wallpapers/pixel-bridge.png
 
 bindsym $mod+b exec librewolf
 #bindsym $mod+v exec codium
-bindsym $mod+t exec /home/blackpill0w/.local/bin/emacs
+bindsym $mod+t exec emacs
 bindsym $mod+m exec elisa
 bindsym $mod+d exec rofi -show drun -show-icons
 bindsym $mod+Shift+d exec rofi -show run -show-icons

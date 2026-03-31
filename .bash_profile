@@ -9,4 +9,4 @@ export BAT_THEME=gruvbox-dark
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
 # opam configuration
-test -r /home/blackpill0w/.opam/opam-init/init.sh && . /home/blackpill0w/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+test -r /home/qyrhx/.opam/opam-init/init.sh && . /home/qyrhx/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
