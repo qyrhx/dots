@@ -49,7 +49,7 @@ The theme has to be reloaded after changing anything in this group."
                 (electric-ice-darker-bg            "#000000" "unspecified-bg" "unspecified-bg") ; official background
                 (electric-ice-darker-fg            "#ffffff" "#dadbc0"        "brightwhite") ; official foreground
                 (electric-ice-darker-current       "#44474a" "#303030"        "brightblack") ; official current-line/selection
-                (electric-ice-darker-comment       "#666666" "#5c6773"        "blue")        ; official comment
+                (electric-ice-darker-comment       "#777777" "#5c6773"        "grey")        ; official comment
                 (electric-ice-darker-cyan          "#7df4f8" "#7df4f8"        "cyan")  ; official cyan
                 (electric-ice-darker-lightred      "#ffc0c0" "#ffc0c0"        "lightred")       ; official lightred
                 (electric-ice-darker-lightred2     "#ff4040" "#ff4040"        "lightred")       ; official lightred
@@ -81,7 +81,7 @@ The theme has to be reloaded after changing anything in this group."
                (hl-line :background ,bg5 :extend t)
                (info-quoted-name :foreground ,electric-ice-darker-lightred)
                (info-string :foreground ,electric-ice-darker-lightred)
-               (lazy-highlight :foreground ,fg2 :background ,bg2)
+               (lazy-highlight :background ,bg4)
                (link :foreground ,electric-ice-darker-cyan :underline t)
                (linum :foreground ,electric-ice-darker-darkgrey :background ,electric-ice-darker-bg)
                (line-number :foreground ,electric-ice-darker-darkgrey :background ,electric-ice-darker-bg)
@@ -111,12 +111,12 @@ The theme has to be reloaded after changing anything in this group."
                (shadow :foreground ,electric-ice-darker-comment)
                (success :foreground ,electric-ice-darker-lightred)
                (telectric-ice-darkerltip :foreground ,electric-ice-darker-fg :background ,electric-ice-darker-current)
-               (trailing-whitespace :background ,electric-ice-darker-lightred :foreground ,electric-ice-darker-current)
+               (trailing-whitespace :background ,electric-ice-darker-bg :foreground ,electric-ice-darker-red)
                (vertical-border :foreground ,bg2)
                (warning :foreground ,electric-ice-darker-lightred)
                ;; syntax / font-lock
                (font-lock-builtin-face :foreground ,electric-ice-darker-cyan)
-               (font-lock-comment-face :foreground ,electric-ice-darker-comment)
+               (font-lock-comment-face :foreground ,electric-ice-darker-comment, :slant italic)
                (font-lock-comment-delimiter-face :inherit shadow)
                (font-lock-constant-face :foreground ,electric-ice-darker-fg)
                (font-lock-doc-face :foreground ,electric-ice-darker-comment)
@@ -443,7 +443,7 @@ The theme has to be reloaded after changing anything in this group."
                (lsp-ui-peek-selection :inherit match)
                (lsp-ui-sideline-symbol :foreground ,fg4 :box (:line-width -1 :color ,fg4) :height 0.99)
                (lsp-ui-sideline-current-symbol :foreground ,electric-ice-darker-fg :weight ultra-bold
-                                               :box (:line-width -1 :color electric-ice-darker-fg) :height 0.99)
+                                               :box (:line-width 1 :color ,electric-ice-darker-fg) :height 0.99)
                (lsp-ui-sideline-code-action :foreground ,electric-ice-darker-yellow)
                (lsp-ui-sideline-symbol-info :slant italic :height 0.99)
                (lsp-ui-doc-background :background ,electric-ice-darker-bg)
@@ -607,10 +607,10 @@ The theme has to be reloaded after changing anything in this group."
                (org-level-3 :weight normal :foreground ,electric-ice-darker-cyan
                             ,@(when electric-ice-darker-enlarge-headings
                                 (list :height electric-ice-darker-height-title-3)))
-               (org-level-4 :weight normal :foreground ,electric-ice-darker-yellow)
+               (org-level-4 :weight normal :foreground ,other-blue)
                (org-level-5 :weight normal :foreground ,electric-ice-darker-cyan)
                (org-level-6 :weight normal :foreground ,electric-ice-darker-lightred)
-               (org-level-7 :weight normal :foreground ,other-blue)
+               (org-level-7 :weight normal :foreground ,electric-ice-darker-yellow)
                (org-level-8 :weight normal :foreground ,electric-ice-darker-fg)
                (org-link :foreground ,electric-ice-darker-cyan :underline t)
                (org-priority :foreground ,electric-ice-darker-cyan)
@@ -683,10 +683,10 @@ The theme has to be reloaded after changing anything in this group."
                (selectrum-secondary-highlight :foreground ,electric-ice-darker-lightred)
                ;; show-paren
                (show-paren-match-face :background unspecified
-                                      :foreground ,electric-ice-darker-fg
+                                      :foreground ,electric-ice-darker-cyan
                                       :weight bold)
                (show-paren-match :background unspecified
-                                 :foreground ,electric-ice-darker-fg
+                                 :foreground ,electric-ice-darker-cyan
                                  :weight bold)
                (show-paren-match-expression :inherit match)
                (show-paren-mismatch :inherit font-lock-warning-face)
@@ -788,11 +788,11 @@ The theme has to be reloaded after changing anything in this group."
                ;; whitespace
                (whitespace-big-indent :foreground ,electric-ice-darker-red)
                (whitespace-empty :foreground ,electric-ice-darker-red)
-               (whitespace-hspace :background ,bg3 :foreground ,electric-ice-darker-comment)
+               (whitespace-hspace :background ,bg3 :foreground ,electric-ice-darker-darkgrey)
                (whitespace-indentation :foreground ,electric-ice-darker-red)
                (whitespace-line :background ,electric-ice-darker-bg :foreground ,electric-ice-darker-pink)
-               (whitespace-newline :foreground ,electric-ice-darker-bg)
-               (whitespace-space :background ,electric-ice-darker-current :foreground ,electric-ice-darker-bg)
+               (whitespace-newline :foreground ,electric-ice-darker-darkgrey)
+               (whitespace-space :background ,electric-ice-darker-bg :foreground ,electric-ice-darker-darkgrey)
                (whitespace-space-after-tab :foreground ,electric-ice-darker-red)
                (whitespace-space-before-tab :foreground ,electric-ice-darker-red)
                (whitespace-tab :background ,electric-ice-darker-current :foreground ,electric-ice-darker-bg)

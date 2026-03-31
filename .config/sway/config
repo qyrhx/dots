@@ -4,12 +4,27 @@
 #
 # Read `man 5 sway` for a complete reference.
 
-font pango:Iosevka Fixed ss07 9
+# Fixes GTK apps taking too long to open (NixOS)
+include /etc/sway/config.d/*
+
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec xdg-desktop-portal-wlr &
+exec xdg-desktop-portal &
+
+#set $XDG_SESSION_TYPE=wayland
+#set $XDG_CURRENT_DESKTOP=sway
+#set $XDG_DESKTOP_PORTAL_DIR=/usr/share/xdg-desktop-portal/portals
+#set $SDL_VIDEODRIVER=wayland
+#set $QT_QPA_PLATFORM=wayland
+
+
+font "Terminus 10"
 input * {
   tap enabled
-  xkb_layout fr
+  xkb_layout us,ara
   xkb_numlock enabled
 }
+bindsym Mod4+space exec --no-startup-id "swaymsg 'input * xkb_switch_layout next'"
 
 ### Variables
 #
@@ -21,7 +36,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term kitty
+set $term tilix
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -31,7 +46,8 @@ set $menu_run_cmd "rofi -show run"
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg ~/Pictures/Wallpapers/pixel-bridge.png fill
+#exec_always swaybg -i ~/Pictures/Wallpapers/pixel-art-castle.png -m fill
+exec_always swaybg -i ~/Pictures/Wallpapers/lain-wallpaper8.jpg -m fill
 #
 # Example configuration:
 #
@@ -44,9 +60,10 @@ output * bg ~/Pictures/Wallpapers/pixel-bridge.png fill
 # Example configuration:
 #
  exec swayidle -w \
-          timeout 300 'swaylock -f -c 000000' \
-          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-          before-sleep 'swaylock -f -c 000000'
+          before-sleep "swaymsg 'input * xkb_switch_layout 0' && swaylock -f -c 000000" \
+          timeout 1800 "swaymsg 'input * xkb_switch_layout 0' && swaylock -f -c 000000"
+#          timeout 900 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+exec sway-audio-idle-inhibit
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -70,11 +87,10 @@ output * bg ~/Pictures/Wallpapers/pixel-bridge.png fill
 #
 # Basics:
 #
-  bindsym $mod+b exec librewolf
-  #bindsym $mod+b exec flatpak run io.gitlab.librewolf-community
-  bindsym $mod+v exec codium
-  bindsym $mod+t exec ~/.local/bin/emacs
-  bindsym $mod+m exec quodlibet
+  bindsym $mod+b exec flatpak run io.gitlab.librewolf-community
+  bindsym $mod+t exec emacsclient --alternate-editor= -c
+  bindsym $mod+m exec lollypop
+  bindsym $mod+f exec thunar
 
     # Change/mute volume
     bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
@@ -89,9 +105,13 @@ output * bg ~/Pictures/Wallpapers/pixel-bridge.png fill
     bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl s +5%
     bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl s 5%-
     # Screenshots
-    bindsym Print exec --no-startup-id gnome-screenshot -i
-    bindsym Ctrl+Print exec slurp | grim -g - - | wl-copy
-
+    bindsym Print exec grim - | wl-copy
+    bindsym Ctrl+Print exec grim -g "$(slurp)" | wl-copy
+    # Clipboard
+    exec --no-startup-id greenclip daemon
+    bindsym $mod+c exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{wl-copy -p}'
+    # Emoji
+    bindsym $mod+Shift+a exec rofimoji --action copy
     # Start a terminal
     bindsym $mod+Return exec $term
 
@@ -114,6 +134,16 @@ output * bg ~/Pictures/Wallpapers/pixel-bridge.png fill
 
     # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+    # exit i3 (logs you out of your X session)
+    mode "exit: [l]ogout, [r]eboot, [s]hutdown, loc[k]" {
+      bindsym o exec swaymsg exit
+      bindsym r exec loginctl reboot
+      bindsym s exec loginctl poweroff
+      bindsym l exec swaymsg 'input * xkb_switch_layout 0' && swaylock -c 000000 --font Iosevka; mode "default"
+      bindsym Escape mode "default"
+      bindsym Return mode "default"
+    }
+    bindsym $mod+x mode "exit: [l]ogout, [r]eboot, [s]hutdown, loc[k]"
 #
 # Moving around:
 #
@@ -153,28 +183,28 @@ set $ws9 "9"
 set $ws10 "10"
 
 # switch to workspace
-bindsym $mod+ampersand workspace $ws1
-bindsym $mod+eacute workspace $ws2
-bindsym $mod+quotedbl workspace $ws3
-bindsym $mod+apostrophe workspace $ws4
-bindsym $mod+parenleft workspace $ws5
-bindsym $mod+minus workspace $ws6
-bindsym $mod+egrave workspace $ws7
-bindsym $mod+underscore workspace $ws8
-bindsym $mod+ccedilla workspace $ws9
-bindsym $mod+agrave workspace $ws10
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
 
 # move focused container to workspace
-bindsym $mod+Shift+ampersand move container to workspace number $ws1
-bindsym $mod+Shift+eacute move container to workspace number $ws2
-bindsym $mod+Shift+quotedbl move container to workspace number $ws3
-bindsym $mod+Shift+apostrophe move container to workspace number $ws4
-bindsym $mod+Shift+parenleft move container to workspace number $ws5
-bindsym $mod+Shift+minus move container to workspace number $ws6
-bindsym $mod+Shift+egrave move container to workspace number $ws7
-bindsym $mod+Shift+underscore move container to workspace number $ws8
-bindsym $mod+Shift+ccedilla move container to workspace number $ws9
-bindsym $mod+Shift+agrave move container to workspace number $ws10
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # Layout stuff:
 #
@@ -190,16 +220,22 @@ bindsym $mod+Shift+agrave move container to workspace number $ws10
     bindsym $mod+e layout toggle split
     workspace_layout tabbed
     # Make the current focus fullscreen
-    bindsym $mod+f fullscreen
+    bindsym $mod+Shift+f fullscreen
 
     # Toggle the current focus between tiling and floating mode
-    bindsym $mod+Shift+space floating toggle
+    bindsym Alt+space floating toggle
 
     # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
+    bindsym $mod+Alt+s focus mode_toggle
 
     # Move focus to the parent container
-    bindsym $mod+a focus parent
+    bindsym $mod+equal focus parent
+    bindsym $mod+plus focus chhild
+
+# auth for apps requiring root
+exec --no-startup-id /usr/lib/polkit-kde-authentication-agent-1 2&> /tmp/e
+
+
 #
 # Scratchpad:
 #
@@ -207,11 +243,11 @@ bindsym $mod+Shift+agrave move container to workspace number $ws10
     # You can send windows there and get them back later.
 
     # Move the currently focused window to the scratchpad
-    #bindsym $mod+Shift+minus move scratchpad
+    #bindsym $mod+Shift+6 move scratchpad
 
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
-    #bindsym $mod+minus scratchpad show
+    #bindsym $mod+6 scratchpad show
 #
 # Resizing containers:
 #
@@ -237,6 +273,9 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+client.focused #39ff14 #000000 #39ff14 #39ff14 #39ff14
+client.unfocused #5c5c5c #000000 #39ff14 #39ff14 #5c5c5c
+
 bar {
     position bottom
 
@@ -245,8 +284,9 @@ bar {
     status_command while ~/.config/sway/swaybar.sh; do true; done
 
     colors {
-        statusline #ffffff
+        statusline #39ff14
         background #000000
-        inactive_workspace #323232 #323232 #5c5c5c
+        focused_workspace #39ff14 #000000 #FFFFFF
+        inactive_workspace #000f0f #000000 #FFFFFF
     }
 }

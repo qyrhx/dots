@@ -1,26 +1,42 @@
 set $mod Mod4
 set $other-mod Mod1
 
+for_window [class="Yad"] floating enable
+for_window [class="Gnome-screenshot"] floating enable
+for_window [class="gnome-calculator"] floating enable
+for_window [class="Protonvpn-app"] floating enable
+for_window [class="Windscribe"] floating enable
+for_window [class="^.*"] border pixel 1
+
 # set wallaper
 exec_always feh --bg-fill ~/Pictures/Wallpapers/pixel-bridge.png
 
-bindsym $mod+b exec librewolf
+bindsym $mod+b exec flatpak run io.gitlab.librewolf-community
 #bindsym $mod+v exec codium
-bindsym $mod+t exec emacs
-bindsym $mod+m exec elisa
+bindsym $mod+t exec emacsclient --alternate-editor= -c
+bindsym $mod+m exec tilix -e musikcube
+bindsym $mod+f exec thunar
 bindsym $mod+d exec rofi -show drun -show-icons
+bindsym $mod+a exec rofimoji --action copy
 bindsym $mod+Shift+d exec rofi -show run -show-icons
 
+exec_always "setxkbmap -layout us,ara -option 'grp:win_space_toggle'"
+
+exec --no-startup-id greenclip daemon
+exec --no-startup-id picom --config /dev/null --backend glx
+bindsym $mod+c exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{xclip}'
 bindsym Mod1+XF86AudioMicMute kill
 
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl s +5%
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl s 5%-
 
 bindsym Print exec --no-startup-id gnome-screenshot -i
-bindsym Ctrl+Print exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
+bindsym Alt+Print exec maim -u /tmp/scr.png && cat /tmp/scr.png | xclip -selection clipboard -t image/png
+bindsym Ctrl+Print exec maim -u -s /tmp/scr.png && cat /tmp/scr.png | xclip -selection clipboard -t image/png
 
 
 # i3 config file (v4)
@@ -36,7 +52,7 @@ bindsym Ctrl+Print exec --no-startup-id maim --select | xclip -selection clipboa
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:Iosevka Fixed ss07 9
+font pango:IosevkaSS07 10
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -48,11 +64,11 @@ exec --no-startup-id dex --autostart --environment i3
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -n -c 000000
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock-fancy
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-bindsym $mod+l exec i3lock-fancy -pf Iosevka  -- scrot -z
+#bindsym $mod+l exec i3lock-fancy
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -68,10 +84,10 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 
 # use these keys for focus, movement, and resize directions when reaching for
 # the arrows is not convenient
-set $up l
-set $down k
-set $left j
-set $right semicolon
+set $up h
+set $down j
+set $left k
+set $right l
 
 # use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -81,7 +97,7 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec tilix
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -119,7 +135,7 @@ bindsym $mod+h split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
@@ -129,16 +145,16 @@ bindsym $mod+e layout toggle split
 workspace_layout tabbed
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $other-mod+space floating toggle
 
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+bindsym $mod+shift+equal focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+bindsym $mod+plus focus child
 
 # move the currently focused window to the scratchpad
 bindsym $mod+Shift+minus scratchpad show
@@ -161,16 +177,16 @@ set $ws9 "9"
 set $ws10 "10"
 
 # switch to workspace
-bindsym $mod+ampersand workspace 1
-bindsym $mod+eacute workspace 2
-bindsym $mod+quotedbl workspace 3
-bindsym $mod+apostrophe workspace 4
-bindsym $mod+parenleft workspace 5
-bindsym $mod+minus workspace 6
-bindsym $mod+egrave workspace 7
-bindsym $mod+underscore workspace 8
-bindsym $mod+ccedilla workspace 9
-bindsym $mod+agrave workspace 10
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
@@ -189,7 +205,15 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+mode "exit: [l]ock, l[o]gout, [r]eboot, [s]hutdown" {
+  bindsym o exec i3-msg exit
+  bindsym r exec loginctl reboot
+  bindsym s exec loginctl poweroff
+  bindsym l exec i3lock-fancy ; mode "default"
+  bindsym Escape mode "default"
+  bindsym Return mode "default"
+}
+bindsym $mod+x mode "exit: [l]ock, l[o]gout, [r]eboot, [s]hutdown"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -199,16 +223,16 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym $left       resize shrink width 10 px or 10 ppt
-        bindsym $down       resize grow height 10 px or 10 ppt
-        bindsym $up         resize shrink height 10 px or 10 ppt
-        bindsym $right      resize grow width 10 px or 10 ppt
+        bindsym $left       resize shrink width 10 px
+        bindsym $down       resize grow height 10 px
+        bindsym $up         resize shrink height 10 px
+        bindsym $right      resize grow width 10 px
 
         # same bindings, but for the arrow keys
-        bindsym Left        resize shrink width 10 px or 10 ppt
-        bindsym Down        resize grow height 10 px or 10 ppt
-        bindsym Up          resize shrink height 10 px or 10 ppt
-        bindsym Right       resize grow width 10 px or 10 ppt
+        bindsym Left        resize shrink width 10 px
+        bindsym Down        resize grow height 10 px
+        bindsym Up          resize shrink height 10 px
+        bindsym Right       resize grow width 10 px
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
@@ -218,20 +242,12 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Start i3bar to display a workspace bar (plus the system information i3status
+# Start i3bar to display a workspace bar (plus the system information i3statu
 # finds out, if available)
+
 bar {
-        status_command i3status
+    status_command i3blocks
 }
 
-#######################################################################
-# automatically start i3-config-wizard to offer the user to create a
-# keysym-based config which used their favorite modifier (alt or windows)
-#
-# i3-config-wizard will not launch if there already is a config file
-# in ~/.config/i3/config (or $XDG_CONFIG_HOME/i3/config if set) or
-# ~/.i3/config.
-#
-# Please remove the following exec line:
-#######################################################################
-exec i3-config-wizard
+
+exec_always numlockx
