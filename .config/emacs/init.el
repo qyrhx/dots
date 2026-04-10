@@ -10,11 +10,6 @@
 ;;; Increase GC threshold for faster startup
 (setq gc-cons-threshold (* 64 1024 1024))
 
-;;; Restore to 64mb after startup
-;(add-hook 'emacs-startup-hook
-;          (lambda ()
-;            (setq gc-cons-threshold (* 64 1024 1024))))
-
 (defun display-startup-time ()
   (message "Emacs loaded in %s with %d garbage collections."
            (format "%.2f seconds"
@@ -196,7 +191,7 @@
 ;;; Themes
 (setq custom-safe-themes t)
 (add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes/"))
-(load-theme 'electric-ice-darker t)
+(load-theme 'ef-kassio t)
 
 ;;; ============================================================
 ;;; GUI
@@ -213,6 +208,7 @@
 
   ;;; Font
   (add-to-list 'default-frame-alist '(font . "CascadiaCode 12"))
+  ;(add-to-list 'default-frame-alist '(font . "FantasqueSansMono 14"))
   (setq font-lock-maximum-decoration 2)
 
   ;;; Themes 2
@@ -222,6 +218,7 @@
       (disable-theme i)))
   (advice-add 'load-theme :before (lambda (&rest _) (disable-all-themes)))
 
+  (use-package ef-themes     :defer t)
   (use-package dracula-theme :defer t)
   (use-package nord-theme    :defer t)
 
@@ -292,6 +289,7 @@
            (c-ts-mode      . lsp)
            (c++-ts-mode    . lsp))
     :config
+    (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
     (setq lsp-clients-clangd-args '("--header-insertion=never")))
 
   (use-package lsp-ui
@@ -316,11 +314,7 @@
   ;; Haskell
   (use-package lsp-haskell :defer t)
   (use-package haskell-mode
-    :defer t
-    :config
-    (add-hook 'haskell-mode-hook #'lsp)
-    (add-hook 'haskell-literate-mode-hook #'lsp)
-    (add-hook 'haskell-mode-hook #'interactive-haskell-mode))
+    :defer t)
 
   (use-package ormolu
     :defer t
