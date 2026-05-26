@@ -188,10 +188,21 @@
   (drag-stuff-define-keys)
   (drag-stuff-global-mode 1))
 
+(use-package reverse-im
+  :ensure t
+  :demand t
+  :config
+  (reverse-im-activate "arabic"))
+
+(use-package typst-ts-mode
+  :defer t
+  :config
+  (setq typst-ts-mode-indent-offset 2))
+
 ;;; Themes
 (setq custom-safe-themes t)
 (add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes/"))
-(load-theme 'ef-kassio t)
+(load-theme 'doric-dark t)
 
 ;;; ============================================================
 ;;; GUI
@@ -219,6 +230,7 @@
   (advice-add 'load-theme :before (lambda (&rest _) (disable-all-themes)))
 
   (use-package ef-themes     :defer t)
+  (use-package doric-themes     :defer t)
   (use-package dracula-theme :defer t)
   (use-package nord-theme    :defer t)
 
@@ -283,54 +295,39 @@
     (global-set-key (kbd "C-, C-S-s") 'yafolding-show-all)
     (global-set-key (kbd "C-, C-S-h") 'yafolding-hide-all))
 
-  ;;; LSP
-  (use-package lsp-mode
-    :hook ((python-ts-mode . lsp)
-           (c-ts-mode      . lsp)
-           (c++-ts-mode    . lsp))
+  ;;; Eglot
+  (use-package eglot
+    :ensure nil
+    :hook ((python-ts-mode . eglot-ensure)
+           (c-ts-mode      . eglot-ensure)
+           (c++-ts-mode    . eglot-ensure)
+           (haskell-mode   . eglot-ensure))
     :config
-    (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-    (setq lsp-clients-clangd-args '("--header-insertion=never")))
+    (setq read-process-output-max (* 1024 1024))
+    (add-to-list 'eglot-server-programs
+                 '((c-ts-mode c++-ts-mode) . ("clangd" "--header-insertion=never")))
+    (with-eval-after-load 'eglot
+      (define-key eglot-mode-map (kbd "C-c C-f") #'eglot-format)))
 
-  (use-package lsp-ui
-    :defer t
-    :config
-    (setq lsp-ui-doc-enable            t
-          lsp-ui-doc-show-with-cursor  t
-          lsp-ui-doc-show-with-mouse   nil
-          lsp-ui-sideline-enable       nil))
+  (use-package eldoc-box
+    :hook (eglot-managed-mode . eldoc-box-hover-mode)
+    :config (setq eldoc-box-max-pixel-height 300))
 
   ;;; Language modes
 
   ;; Python
-  (use-package lsp-pyright
-    :defer t
-    :config
-    (defun set-python-format-keybinding ()
-      (local-set-key (kbd "C-, f") #'lsp-format-buffer))
-    (add-hook 'python-ts-mode-hook 'set-python-format-keybinding)
-    (setq python-indent-offset 2))
+  (setq python-indent-offset 2)
 
   ;; Haskell
-  (use-package lsp-haskell :defer t)
-  (use-package haskell-mode
-    :defer t)
+  (use-package haskell-mode :defer t
+    :config (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
 
   (use-package ormolu
     :defer t
-    :hook (haskell-mode . ormolu-format-on-save-mode)
-    :bind (:map haskell-mode-map
-                ("C-, C-f" . ormolu-format-buffer))
-    :config (setq ormolu-process-path "fourmolu"))
-
-  ;; C/C++
-  (use-package clang-format
-    :defer t
-    :config
-    (defun set-clang-format-keybinding ()
-      (local-set-key (kbd "C-, f") 'clang-format-buffer))
-    (add-hook 'c-ts-mode-hook   'set-clang-format-keybinding)
-    (add-hook 'c++-ts-mode-hook 'set-clang-format-keybinding))
+    :config (setq ormolu-process-path "fourmolu")
+    (add-hook 'haskell-mode-hook
+              (lambda ()
+                (set-key (kbd "C-c C-f") #'ormolu-format-buffer))))
 
   ;; Other languages
   (add-hook 'go-ts-mode-hook
@@ -358,6 +355,11 @@
   (use-package latex-preview-pane :defer t)
   (use-package nov
     :defer t
-    :mode ("\\.epub\\'" . nov-mode))
+    :mode ("\\.epub\\'" . nov-mode)
+    :config
+    (defun my-nov-font-setup ()
+      (face-remap-add-relative 'variable-pitch :family "Times New Roman"
+                               :height 1.0))
+    (add-hook 'nov-mode-hook 'my-nov-font-setup))
 
 ) ; end (when (display-graphic-p))

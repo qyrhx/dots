@@ -203,7 +203,7 @@ The theme has to be reloaded after changing anything in this group."
                (diredp-tagged-autofile-name :foreground ,electric-ice-darker-yellow)
                ;; eldoc-box
                (eldoc-box-border :background ,electric-ice-darker-current)
-               (eldoc-box-body :background ,electric-ice-darker-current)
+               (eldoc-box-body :background ,electric-ice-darker-bg)
                ;; elfeed
                (elfeed-search-date-face :foreground ,electric-ice-darker-comment)
                (elfeed-search-title-face :foreground ,electric-ice-darker-fg)
